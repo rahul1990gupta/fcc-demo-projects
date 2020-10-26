@@ -1,6 +1,6 @@
 // server.js
 // where your node app starts
-
+require("dotenv").config();
 // init project
 var express = require('express');
 var app = express();
@@ -20,8 +20,15 @@ app.get("/", function (req, res) {
 
 
 // your first API endpoint... 
-app.get("/api/hello", function (req, res) {
-  res.json({greeting: 'hello API'});
+app.get("/api/whoami", function (req, res) {
+  const acl = req.headers["accept-language"];
+  const ua = req.headers["user-agent"];
+
+  res.json({
+    ipaddress: req.headers.ipaddress,
+    language: acl,
+    software: ua
+  });
 });
 
 
