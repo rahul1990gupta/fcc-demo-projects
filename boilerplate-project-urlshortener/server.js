@@ -85,11 +85,30 @@ async function processQuery(url) {
 app.post("/api/shorturl/new", function (req, res) {
   // extract the url 
   var url = req.body.url;
+  try {
+    http_url = new URL(url);
+  } catch(_){
+    return res.json({
+      error: "invalid url"
+    })
+  }
   processQuery(url).then((response) => {
     res.json(response);
   })
 });
 
+app.get("/api/shorturl/:short_url", (req, res) => {
+  const short_url = req.params.short_url;
+  console.log(short_url);
+  Shorturl.findOne({short_url: short_url}).then( (result) => {
+    if(result){
+      return res.redirect(result.original_url);
+    }
+    res.json({
+      error: "short_url is not in the records!"
+    })
+  });
+})
 
 app.listen(port, function () {
   console.log('Node.js listening ...');
